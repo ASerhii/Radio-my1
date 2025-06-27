@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const request = require('request');
 
@@ -10,11 +9,26 @@ const stations = {
   trance: 'http://air.radiorecord.ru:805/trance_320'
 };
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
+
 app.get('/:station', (req, res) => {
   const url = stations[req.params.station];
   if (!url) return res.status(404).send('Станція не знайдена 😢');
-  res.setHeader('Content-Type', 'audio/mpeg');
-  req.pipe(request(url)).pipe(res);
+
+  // Встановлюємо Content-Type в залежності від розширення
+  if (url.endsWith('_320')) {
+    res.setHeader('Content-Type', 'audio/mpeg');
+  } else {
+    res.setHeader('Content-Type', 'audio/aac');
+  }
+
+  req.pipe(request(url)).pipe(res).on('error', (err) => {
+    console.error('Stream error:', err);
+    res.end();
+  });
 });
 
 const PORT = process.env.PORT || 3000;
