@@ -18,7 +18,7 @@ app.get('/:station', (req, res) => {
   const url = stations[req.params.station];
   if (!url) return res.status(404).send('Станція не знайдена 😢');
 
-  // Встановлюємо Content-Type в залежності від розширення
+  // Встановлюємо Content-Type в залежності від потоку
   if (url.endsWith('_320')) {
     res.setHeader('Content-Type', 'audio/mpeg');
   } else {
