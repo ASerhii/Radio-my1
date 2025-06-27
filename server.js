@@ -4,6 +4,7 @@ const http = require('http');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Проксі маршрут
 app.get('/ibiza', (req, res) => {
   const options = {
     hostname: 'air.radiorecord.ru',
@@ -12,7 +13,7 @@ app.get('/ibiza', (req, res) => {
     method: 'GET',
     headers: {
       'Icy-MetaData': '1',
-      'User-Agent': 'Mozilla/5.0' // деякі стріми вимагають юзер-агента
+      'User-Agent': 'Mozilla/5.0'
     }
   };
 
@@ -29,14 +30,14 @@ app.get('/ibiza', (req, res) => {
   streamReq.end();
 });
 
+// Головна сторінка з плеєром
 app.get('/', (req, res) => {
   res.send(`
-    <h1>Ibiza Radio</h1>
+    <h1>Радіо IBIZA 🎶</h1>
     <audio controls autoplay src="/ibiza"></audio>
   `);
 });
 
 app.listen(PORT, () => {
-  console.log(`Radio proxy running on port ${PORT}`);
+  console.log(`🔥 Ibiza proxy server running on port ${PORT}`);
 });
-
